@@ -1,0 +1,20 @@
+{
+        "wp":   {"db_name": "[^/]*define.*'DB_NAME'.*'([A-Za-z0-9_]+)'",
+                "db_user": "[^/]*define.*'DB_USER'.*'([A-Za-z0-9_]+)'",
+                "db_pass": "[^/]*define.*'DB_PASSWORD'.*'([A-Za-z0-9_]+)'",
+                "db_host": "[^/]*define.*'DB_HOST'.*'([A-Za-z0-9_]+)'",
+                "config": "wp-config.php"},
+
+        "joomla": {"db_name": "[^/]*.*public.*\\$db\\s?=\\s?'(.*)'",
+                "db_user": "[^/]*.*public.*\\$user\\s?=\\s?'(.*)'",
+                "db_pass": "[^/]*.*public.*\\$password\\s?=\\s?'(.*)'",
+                "db_host": "[^/]*.*public.*\\$host\\s?=\\s?'(.*)'",
+                "config": "configuration.php"},
+
+        "opencart": {"db_name": "[^/]*define.*'DB_DATABASE'.*'([A-Za-z0-9_]+)'",
+                "db_user": "[^/]*define.*'DB_USERNAME'.*'([A-Za-z0-9_]+)'",
+                "db_pass": "[^/]*define.*'DB_PASSWORD'.*'([A-Za-z0-9_]+)'",
+                "db_host": "[^/]*define.*'DB_HOSTNAME'.*'([A-Za-z0-9_]+)'",
+                "config": "config.php"}
+}
+
