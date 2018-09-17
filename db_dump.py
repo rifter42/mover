@@ -10,5 +10,3 @@ def dump(host, user, db, password):
 dbdata = search.parse_config(cms)
 
 dump(dbdata['db_host'], dbdata['db_user'], dbdata['db_name'], dbdata['db_pass'])
-
-H U Y
