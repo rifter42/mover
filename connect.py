@@ -97,25 +97,25 @@ class SshConnection(RemoteConnection):
 
     def find_sites(self, domains, path='/'):
         sites = defaultdict()
-        self._command("cd {}".format(path))
-        dirs = self._command("find . -type d -maxdepth 2")
+        self.command("cd {}".format(path))
+        dirs = self.command("find . -type d -maxdepth 2")
         for dir in dirs:
             domain, site_path = self._find_site_path(domains, dir)
             if site_path:
                 domains.remove(domain)
                 sites[domain] = os.path.normpath(os.path.join(path, site_path))
-        self._command("find . -type f -name 'site_search.txt' -delete")
+        self.command("find . -type f -name 'site_search.txt' -delete")
         return sites
 
 
     def dump_db(self, db_name, db_host, db_user, db_password):
-        return self._command("mysqldump -h {0} -u{1} -p'{2}' {3}".format(
+        return self.command("mysqldump -h {0} -u{1} -p'{2}' {3}".format(
             db_host, db_user, db_password, db_name
         ))
 
     def _find_site_path(self, domains, path):
         file_path = os.path.join(path, FILE)
-        self._command("echo {0} > {1}".format(HASH, file_path))
+        self.command("echo {0} > {1}".format(HASH, file_path))
         domain, ret_path = None, None
         for domain in domains:
             response = requests.get('http://{0}/{1}'.format(domain, FILE))
@@ -134,7 +134,7 @@ class SshConnection(RemoteConnection):
         db_user = re.compile(regex[cms]['db_user'])
         db_pass = re.compile(regex[cms]['db_pass'])
 
-    def _command(self, cmd):
+    def command(self, cmd):
         print("executing", cmd)
         stdin, stdout, stderr = self.conn.exec_command(cmd)
 
