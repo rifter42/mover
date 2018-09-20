@@ -105,3 +105,4 @@ venv.bak/
 .idea/
 /testdump.sql
 /sample_configs
+/config.yaml
