@@ -19,8 +19,9 @@ parser.add_argument('-p', type=str, help='ssh/ftp pass')
 parser.add_argument('-d', type=str, help='domain')
 args = parser.parse_args()
 
+def setup_logging():
+    logging.basicConfig(filename='mover.log', filemode='w', level=logging.INFO)
 
-if __name__ == '__main__':
     logger = getLogger('main')
     logger.setLevel(logging.INFO)
     ch = logging.StreamHandler(sys.stdout)
@@ -29,6 +30,11 @@ if __name__ == '__main__':
     ch.setLevel(logging.DEBUG)
     logger.addHandler(ch)
 
+    return logger
+
+if __name__ == '__main__':
+
+    logger = setup_logging()
     with open("config.yaml", 'r') as f:
         config = yaml.load(f, Loader=Loader)
         pprint(config)
