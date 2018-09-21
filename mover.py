@@ -62,3 +62,4 @@ class Mover:
         key, err = self._local.command("cat ~/.ssh/id_rsa_move.pub")
         self._remote.command("echo {0} >> ~/.ssh/authorized_keys".format(key[0].rstrip()))
         self.logger.info("key added")
+

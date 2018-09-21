@@ -181,7 +181,42 @@ class SshConnection(RemoteConnection):
 
         return stdout, stderr
 
+class ApiConnection():
+    def __init__(self, token):
+        self.token = token
 
+    @classmethod
+    def get_token(self, user, password):
+        post_data = {"headers": {"Content-Type": "application/json", "Accept": "application/json", "Authorization": "Basic YS5zbWlybm92YTplSXdVcFNqekhtWEQ=", "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL"}}
+        response = requests.post('https://api.timeweb.ru/v1.1/access', headers=post_data["headers"])
+
+        return response.json()['token']
+
+    def post_comment(self, message, user, ticket):
+        post_data = {"headers": {"Content-Type": "application/json",
+                                 "Accept": "application/json",
+                                 "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL",
+                                 "Authorization": "Bearer {}".format(self.token)},
+                     "data": {"message": message,
+                              "attachments": [],
+                              "internal": True,
+                              "upthread": False}
+                     }
+
+        response = requests.post('https://api.timeweb.ru/v1.1/accounts/{0}/tickets/{1}/comments'.format(user, str(ticket)), headers=post_data["headers"], json=post_data["data"])
+        return response
+
+    def delay_ticket(self, user, ticket, delay_time, message):
+        post_data = {"headers": {"Content-Type": "application/json",
+                                 "Accept": "application/json",
+                                 "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL",
+                                 "Authorization": "Bearer {}".format(self.token)},
+                     "data": {"delay": delay_time,
+                              "delay_message": message}
+                     }
+
+        response = requests.post('https://api.timeweb.ru/v1.1/accounts/{0}/tickets/{1}'.format(user, str(ticket)), headers=post_data["headers"], json=post_data["data"])
+        return response
 
 # def ftp_listing(ftp, depth=0):
 #     if depth > 3:

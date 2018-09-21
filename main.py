@@ -1,5 +1,5 @@
 import argparse
-from connect import SshConnection, FtpConnection
+from connect import SshConnection, ApiConnection
 from mover import Mover
 import yaml
 try:
@@ -10,7 +10,7 @@ from pprint import pprint
 import logging
 from logging import getLogger
 import sys
-
+from datetime import datetime, timedelta
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-s', type=str, help='ssh/ftp host')
@@ -38,6 +38,9 @@ if __name__ == '__main__':
     with open("config.yaml", 'r') as f:
         config = yaml.load(f, Loader=Loader)
         pprint(config)
+
+
+
     for user_name, values in config.items():
         logger.info("moving for user {0}, domains {1}".format(user_name, values['domains']))
         try:
@@ -59,13 +62,30 @@ if __name__ == '__main__':
         except KeyError:
             start_dir = '~/'
 
+        try:
+            ticket = values['ticket']
+        except KeyError:
+            logger.info("ticket not found for user {}".format(user_name))
+            ticket = None
+
+        token = ApiConnection.get_token('a.smirnova', 'eIwUpSjzHmXD')
+        api = ApiConnection(token)
+
         domains = list(set(values['domains']))
+
+        if ticket is not None:
+            now = datetime.now()
+            delay_time = format(now + timedelta(hours=5), '%Y-%m-%d %H:%M:%S')
+            api.delay_ticket('ca73902', ticket, delay_time, "transfer for user {0} has started, delayed until {1}")
+
         sites = mover.find_sites(domains, start_dir)
 
         for domain, dir in sites.items():
             logger.info("moving {0}:{1} from {2}".format(user_name, domain, dir))
-            print(dir)
-
             result = mover.move(dir, domain)
+
+                comm = api.post_comment("transfer finished for user {0} domain {1}".format(user_name, domain), 'ca73902', ticket)
+                print(comm.text)
+                logger.info("posted to {}".format(ticket))
             pprint(result[0][-2:]) # pizdos
 

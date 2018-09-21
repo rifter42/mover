@@ -106,3 +106,4 @@ venv.bak/
 /testdump.sql
 /sample_configs
 /config.yaml
+/test_api.py
