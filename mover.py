@@ -39,7 +39,7 @@ class Mover:
         except Exception as e:
             self.logger.info("config not found")
 
-        self.logger.info("executing rsync")
+        self.logger.info("executing rsync {}".format(rsync_cmd))
         return self._exec_rsync(rsync_cmd)
 
     @helpers.retry(HuyovyiReturnCodeError, logger=logging.getLogger('main').getChild('mover'))
@@ -47,6 +47,7 @@ class Mover:
         stdout, stderr, rcode = self._local.command(cmd, extended_return=True)
 
         if rcode != 0:
+            self.logger.info("failed to launch rsync with error {0}, code {1}".format(stderr, rcode))
             raise HuyovyiReturnCodeError
 
         return stdout, stderr

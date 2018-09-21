@@ -40,14 +40,17 @@ if __name__ == '__main__':
         pprint(config)
     for user_name, values in config.items():
         logger.info("moving for user {0}, domains {1}".format(user_name, values['domains']))
-        src = SshConnection(host=values['source']['host'],
+        try:
+            src = SshConnection(host=values['source']['host'],
                             user=values['source']['user'],
                             password=values['source']['password'],
                             port=22, logger=logger)
-        dst = SshConnection(host=values['destination']['host'],
+            dst = SshConnection(host=values['destination']['host'],
                             user=values['destination']['user'],
                             password=values['destination']['password'],
                             port=22, logger=logger)
+        except Exception as e:
+            continue
 
         mover = Mover(dst, src, logger)
 
@@ -62,11 +65,7 @@ if __name__ == '__main__':
         for domain, dir in sites.items():
             logger.info("moving {0}:{1} from {2}".format(user_name, domain, dir))
             print(dir)
+
             result = mover.move(dir, domain)
             pprint(result[0][-2:]) # pizdos
-    # db = ssh.dump_db("liadeiso_card", "localhost", "liadeiso_card", "*s73r2g^")
-    # with open("testdump.sql", 'w') as f:
-    #    f.writelines(db)
-    # print(db)
-    #  ftp = SshConnection('liadeiso.beget.tech', 'liadeiso', 'T9AoqGEW', port=21)
-    #  ftp.find_sites(['liadeiso.beget.tech'])
+

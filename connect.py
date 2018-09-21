@@ -91,9 +91,14 @@ class SshConnection(RemoteConnection):
         super().__init__(host, user, password, port)
         conn = paramiko.SSHClient()
         conn.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-        conn.connect(hostname=self.host, username=self.user, password=self.password)
-        self.conn = conn
         self.logger = logger.getChild('ssh')
+        try:
+            conn.connect(hostname=self.host, username=self.user, password=self.password)
+            self.conn = conn
+
+        except Exception as e:
+            self.logger.info("can't connect via ssh for user {}".format(user))
+            raise e
 
     def find_sites(self, domains, path='/'):
         self.logger.info("searching for {0} in {1}".format(domains, path))
