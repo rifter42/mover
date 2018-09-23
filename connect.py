@@ -127,13 +127,14 @@ class SshConnection(RemoteConnection):
         path = path.rstrip()
         file_path = os.path.join(path, FILE)
         self.command("echo {0} > {1}".format(HASH, file_path))
-        domain, ret_path = None, None
+
         for domain in domains:
             response = requests.get('http://{0}/{1}'.format(domain, FILE))
             if HASH in str(response.content):
-                domain, ret_path = domain, path
-
-        return domain, ret_path
+                ret_domain, ret_path = domain, path
+                self.command("rm '{}'".format(file_path))
+                return ret_domain, ret_path
+        return None, None
 
     def parse_config(self, site):
         with open("cms.json", "r", encoding='utf-8-sig') as f:
@@ -182,40 +183,54 @@ class SshConnection(RemoteConnection):
         return stdout, stderr
 
 class ApiConnection():
+    URL = 'https://api.timeweb.ru/v1.1'
+
     def __init__(self, token):
         self.token = token
 
+    def request(self, method, params, request_method):
+        headers = { "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL",
+                    "Authorization": "Bearer {}".format(self.token)}
+
+        req_funcs = {
+         "GET": requests.get,
+         "POST": requests.post,
+         "PUT": requests.put,
+         "DELETE": requests.delete,
+         "OPTIONS": requests.options,
+        }
+
+        print('{0}/{1}'.format(self.URL, method))
+        response = req_funcs[request_method]('{0}/{1}'.format(self.URL, method), headers=headers, json=params)
+        print(response.text)
+        return response.text
+
     @classmethod
     def get_token(self, user, password):
-        post_data = {"headers": {"Content-Type": "application/json", "Accept": "application/json", "Authorization": "Basic YS5zbWlybm92YTplSXdVcFNqekhtWEQ=", "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL"}}
-        response = requests.post('https://api.timeweb.ru/v1.1/access', headers=post_data["headers"])
+        post_data = {"headers": {"Content-Type": "application/json", "Accept": "application/json", "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL"}}
+        response = requests.post('https://api.timeweb.ru/v1.1/access', headers=post_data["headers"], auth=(user, password))
 
         return response.json()['token']
 
     def post_comment(self, message, user, ticket):
-        post_data = {"headers": {"Content-Type": "application/json",
-                                 "Accept": "application/json",
-                                 "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL",
-                                 "Authorization": "Bearer {}".format(self.token)},
-                     "data": {"message": message,
-                              "attachments": [],
-                              "internal": True,
-                              "upthread": False}
-                     }
+        data = {"message": message,
+                "attachments": [],
+                "internal": True,
+                "upthread": False}
+        method = "accounts/{0}/tickets/{1}/comments".format(user, str(ticket))
 
-        response = requests.post('https://api.timeweb.ru/v1.1/accounts/{0}/tickets/{1}/comments'.format(user, str(ticket)), headers=post_data["headers"], json=post_data["data"])
+        response = self.request(method, data, "POST")
         return response
 
     def delay_ticket(self, user, ticket, delay_time, message):
-        post_data = {"headers": {"Content-Type": "application/json",
-                                 "Accept": "application/json",
-                                 "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL",
-                                 "Authorization": "Bearer {}".format(self.token)},
-                     "data": {"delay": delay_time,
-                              "delay_message": message}
-                     }
+        data = {"delay": delay_time,
+                "delay_comment": message
+                }
+        method = "accounts/{0}/tickets/{1}".format(user, str(ticket))
 
-        response = requests.post('https://api.timeweb.ru/v1.1/accounts/{0}/tickets/{1}'.format(user, str(ticket)), headers=post_data["headers"], json=post_data["data"])
+        response = self.request(method, data, "PUT")
         return response
 
 # def ftp_listing(ftp, depth=0):
@@ -242,4 +257,6 @@ class ApiConnection():
 # 8. Коды рсинка
 # 9. GJCJCFNM {EQ
 # 10. Л О Г И
+# 11. ПОСОСАТЬ ХУЙ
+# 12. ИНТЕГРАЦИЯ АПИ
 # 11. ХУЙ ДОСОСАН
