@@ -68,7 +68,7 @@ if __name__ == '__main__':
             logger.info("ticket not found for user {}".format(user_name))
             ticket = None
 
-        token = ApiConnection.get_token('a.smirnova', 'eIwUpSjzHmXD')
+        token = ApiConnection.get_token('t.transfer', 'w8et76r4g8s7df6eresdg')
         api = ApiConnection(token)
 
         domains = list(set(values['domains']))
