@@ -5,9 +5,15 @@ from functools import wraps
 def make_rsync_command(host, user, password, dir, dst_dir):
     """
 
+    :param host:
+    :param user:
+    :param password:
+    :param dir:
+    :param dst_dir:
+    :return:
     :rtype: str
     """
-    return "RSYNC_PASSWORD={0} rsync -e 'ssh -i '$HOME/.ssh/id_rsa_move' -o StrictHostKeyChecking=no' --log-file=$HOME/.tmp/mover.log -rlcpv {2}@{3}:{4} {5} ".format(password, dst_dir, user, host, dir, dst_dir)
+    return "RSYNC_PASSWORD={0} rsync -e 'ssh -i '$HOME/.ssh/id_rsa_move' -o StrictHostKeyChecking=no' --log-file=$HOME/.tmp/mover.log -rlcp {2}@{3}:{4} {5} ".format(password, dst_dir, user, host, dir, dst_dir)
 def retry(ExceptionToCheck, tries=4, delay=3, backoff=2, logger=None):
     """Retry calling the decorated function using an exponential backoff.
 

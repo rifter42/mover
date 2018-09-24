@@ -1,5 +1,5 @@
-from connect import ApiConnection
+from api import Api
 
-token = ApiConnection.get_token('a.smirnova', 'eIwUpSjzHmXD')
+token = Api.get_token('a.smirnova', 'eIwUpSjzHmXD')
 
 print(token)
