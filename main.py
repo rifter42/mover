@@ -76,8 +76,8 @@ if __name__ == '__main__':
         if ticket is not None:
             now = datetime.now()
             delay_time = format(now + timedelta(hours=5), '%Y-%m-%d %H:%M:%S')
-            api.delay_ticket('ca73902', ticket, delay_time, "transfer for user {0} has started, delayed until {1}".format(user_name, delay_time))
-
+            api.delay_ticket(user_name, ticket, delay_time, "transfer for user {0} has started, delayed until {1}".format(user_name, delay_time))
+        print(start_dir)
         sites = mover.find_sites(domains, start_dir)
 
         for domain, dir in sites.items():
@@ -85,11 +85,11 @@ if __name__ == '__main__':
             result = mover.move(dir, domain)
 
             if ticket is not None:
-                comm = api.post_comment("transfer finished for user {0} domain {1}".format(user_name, domain), 'ca73902', ticket)
+                comm = api.post_comment("transfer finished for user {0} domain {1}".format(user_name, domain), user_name, ticket)
                 logger.info("posted to {}".format(ticket))
             pprint(result[0][-2:]) # pizdos
 
         if ticket is not None:
             now = datetime.now()
             delay_time = format(now + timedelta(minutes=2), '%Y-%m-%d %H:%M:%S')
-            #api.delay_ticket('ca73902', ticket, delay_time, "transfer finished for user {}".format(user_name))
+            api.delay_ticket(user_name, ticket, delay_time, "transfer finished for user {}".format(user_name))

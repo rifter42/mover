@@ -105,9 +105,10 @@ class SshConnection(RemoteConnection):
         self.command("find . -type f -name 'site_search.txt' -delete") # pizdos
         sites = defaultdict()
         self.command("cd {}".format(path))
-        dirs, err = self.command("find . -type d -maxdepth 2")
+        dirs, err = self.command("find $PWD -type d -maxdepth 2", pwd=path)
         for dir in dirs:
             domain, site_path = self._find_site_path(domains, dir)
+            print(dir)
             if site_path:
                 domains.remove(domain)
                 sites[domain] = os.path.normpath(os.path.join(path, site_path))
@@ -126,6 +127,7 @@ class SshConnection(RemoteConnection):
     def _find_site_path(self, domains, path):
         path = path.rstrip()
         file_path = os.path.join(path, FILE)
+        print(file_path)
         self.command("echo {0} > {1}".format(HASH, file_path))
 
         for domain in domains:
@@ -170,9 +172,12 @@ class SshConnection(RemoteConnection):
             return result
 
 
-    def command(self, cmd: str, extended_return=False):
-        self.logger.debug("executing {}".format(cmd))
-        stdin, stdout, stderr = self.conn.exec_command(cmd)
+    def command(self, cmd: str, pwd=None, extended_return=False):
+        _cmd = cmd
+        if pwd:
+            _cmd = "cd {0}; {1}".format(pwd, cmd)
+        self.logger.debug("executing {}".format(_cmd))
+        stdin, stdout, stderr = self.conn.exec_command(_cmd)
         return_code = stdout.channel.recv_exit_status()
         stdout = stdout.readlines()
         stderr = stderr.readlines()
