@@ -7,7 +7,7 @@ from logging import getLogger
 import sys
 from datetime import timedelta
 import argparse
-
+import requests
 import yaml
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -27,6 +27,17 @@ def setup_logging():
     logger.addHandler(ch)
 
     return logger
+
+def test_domains(domains, logger):
+    for domain in domains:
+        try:
+            requests.get('http://{0}/'.format(domain))
+        except Exception as e:
+            logger.info("{} is not responding and won't be moved".format(domain))
+            domains.remove(domain)
+            continue
+    return domains
+
 
 
 def run(config, logger=None):
@@ -68,6 +79,8 @@ def run(config, logger=None):
         api = Api(token)
 
         domains = list(set(values['domains']))
+        test_domains(domains, logger)
+
 
         post_comment = api.post_comment if ticket else lambda *x: None
         delay_ticket = api.delay_ticket if ticket else lambda *x: None
