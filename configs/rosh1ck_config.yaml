@@ -1,0 +1,5 @@
+rosh1ck:
+  destination: {host: 92.53.96.200, password: NFS5phZX, user: rosh1ck}
+  domains: [gemoroy-wordpress-10.tw1.ru]
+  source: {host: 92.53.114.201, password: tlmqbC5p, start_dir: ~/, user: gemoroy}
+  ticket: '3280804'

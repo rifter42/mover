@@ -1,0 +1,6 @@
+root:
+  destination: {host: 92.53.124.217, password: jS76yG9R, user: root}
+  domains: [iaropolch.ru]
+  source: {host: 188.120.239.193, password: 2p90MPlq1xud, start_dir: /var/www/iaropolch/data/www/iaropolch.ru,
+    user: root}
+  ticket: '3283427'

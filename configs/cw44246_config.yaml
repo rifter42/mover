@@ -1,0 +1,5 @@
+cw44246:
+  destination: {host: 92.53.96.169, password: 4Z52vh3PS5Ss, user: cw44246}
+  domains: [mutokukai.tmweb.ru]
+  source: {host: 92.53.96.18, password: OLcqXzVZi3dh, start_dir: mutoku, user: co63878}
+  ticket: '3284491'

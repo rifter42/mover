@@ -6,6 +6,7 @@ import logging
 from logging import getLogger
 import sys
 from datetime import timedelta
+import argparse
 
 import yaml
 try:
@@ -39,10 +40,14 @@ def run(config, logger=None):
                                 user=values['source']['user'],
                                 password=values['source']['password'],
                                 port=22, logger=logger)
+            print("source connected")
+            print(values['source']['host'], values['source']['user'], values['source']['password'])
+            print(values['destination']['host'], values['destination']['user'], values['destination']['password'])
             dst = SshConnection(host=values['destination']['host'],
                                 user=values['destination']['user'],
                                 password=values['destination']['password'],
                                 port=22, logger=logger)
+            print("dst connected")
         except Exception:
             continue
 
@@ -84,14 +89,17 @@ def run(config, logger=None):
                     result[domain] = "failed"
                     continue
         finally:
-            post_comment("transfer finished for user {0}: {1}".format(user_name, '\n'.join(["{}: {}".format(k, v) for k, v in result])), user_name, ticket, True)
+            post_comment("transfer finished for user {0}: {1}".format(user_name, '\n'.join(["{}: {}".format(k, v) for k, v in result.items()])), user_name, ticket, True)
             logger.info("posted to {}".format(ticket))
 
 if __name__ == '__main__':
 
     logger = setup_logging()
 
-    with open("config.yaml", 'r') as f:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", "-c", type=str, help="config file for transfer (full path please)",     required=True)
+    args = parser.parse_args()
+    with open(args.config, 'r') as f:
         config = yaml.load(f, Loader=Loader)
 
     try:
