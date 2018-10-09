@@ -29,14 +29,15 @@ def setup_logging():
     return logger
 
 def test_domains(domains, logger):
+    valid_domains = []
     for domain in domains:
         try:
             requests.get('http://{0}/'.format(domain))
+            valid_domains.append(domain)
         except Exception as e:
             logger.info("{} is not responding and won't be moved".format(domain))
-            domains.remove(domain)
-            continue
-    return domains
+    print(valid_domains)
+    return valid_domains
 
 
 
@@ -78,8 +79,8 @@ def run(config, logger=None):
         token = Api.get_token('t.transfer', 'w8et76r4g8s7df6eresdg')
         api = Api(token)
 
-        domains = list(set(values['domains']))
-        test_domains(domains, logger)
+        domains_check = list(set(values['domains']))
+        domains = test_domains(domains_check, logger)
 
 
         post_comment = api.post_comment if ticket else lambda *x: None

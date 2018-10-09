@@ -14,7 +14,7 @@ class PostHandler(http.server.BaseHTTPRequestHandler):
 			yaml.dump(data, f, allow_unicode=True)
 
 	def run_mover(self):
-		subprocess.run(["python3", "/home/mover/main.py", "-c", self.path])
+		subprocess.Popen(["python3", "/home/mover/main.py", "-c", self.path])
 
 	def do_POST(self):
 		self.post_data = str(self.rfile.read(int(self.headers['Content-Length'])), "UTF-8")

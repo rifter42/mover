@@ -1,0 +1,6 @@
+alinaadg:
+  destination: {host: 92.53.123.231, password: 7AeLV1Xn, user: alinaadg}
+  domains: [valero.ru]
+  source: {host: ssh.yarchel.nichost.ru, password: PN5X/AjK, start_dir: valero.ru,
+    user: yarchel}
+  ticket: '3285301'
