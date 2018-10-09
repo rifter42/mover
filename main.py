@@ -8,6 +8,7 @@ import sys
 from datetime import timedelta
 import argparse
 import requests
+import subprocess
 import yaml
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -15,8 +16,9 @@ except ImportError:
     from yaml import Loader, Dumper
 
 
-def setup_logging():
-    logging.basicConfig(filename='mover.log', filemode='w', level=logging.INFO)
+def setup_logging(user_name):
+    filename = 'logs/mover_{}.log'.format(user_name)
+    logging.basicConfig(filename=filename, filemode='w', level=logging.INFO)
 
     logger = getLogger('main')
     logger.setLevel(logging.INFO)
@@ -105,17 +107,17 @@ def run(config, logger=None):
         finally:
             post_comment("transfer finished for user {0}: {1}".format(user_name, '\n'.join(["{}: {}".format(k, v) for k, v in result.items()])), user_name, ticket, True)
             logger.info("posted to {}".format(ticket))
+            subprocess.Popen(["sshpass", "-p", "{0}".format(dst.password), "scp", "logs/mover_{0}.log".format(user_name), "{0}@{1}:$HOME/.tmp/".format(dst.user, dst.host)])
 
 if __name__ == '__main__':
 
-    logger = setup_logging()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", "-c", type=str, help="config file for transfer (full path please)",     required=True)
+    parser.add_argument("--config", "-c", type=str, help="config file for transfer (full path please)", required=True)
     args = parser.parse_args()
     with open(args.config, 'r') as f:
         config = yaml.load(f, Loader=Loader)
-
+    logger = setup_logging(list(config)[0])
     try:
         run(config, logger)
     except Exception as e:
