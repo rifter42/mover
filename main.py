@@ -107,7 +107,7 @@ def run(config, logger=None):
         finally:
             post_comment("transfer finished for user {0}: {1}".format(user_name, '\n'.join(["{}: {}".format(k, v) for k, v in result.items()])), user_name, ticket, True)
             logger.info("posted to {}".format(ticket))
-            subprocess.Popen(["sshpass", "-p", "{0}".format(dst.password), "scp", "logs/mover_{0}.log".format(user_name), "{0}@{1}:$HOME/.tmp/".format(dst.user, dst.host)])
+            proc = subprocess.run(["sshpass", "-p", "{0}".format(dst.password), "scp", "-o", "StrictHostKeyChecking=no", "/home/mover/logs/mover_{0}.log".format(user_name), "{0}@{1}:$HOME/.tmp/".format(dst.user, dst.host)], stdout=sys.stdout, stderr=sys.stdout)
 
 if __name__ == '__main__':
 

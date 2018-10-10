@@ -1,5 +1,0 @@
-cf57220:
-  destination: {host: 92.53.96.103, password: 5z4mQTg0tdQR, user: cf57220}
-  domains: [abp090sh.tmweb.ru]
-  source: {host: 176.57.210.4, password: ZW6hqm71, user: abp090sh}
-  ticket: '3281630'

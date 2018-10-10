@@ -1,6 +1,0 @@
-root:
-  destination: {host: 188.225.76.69, password: cGdo8LyH, user: root}
-  domains: [xn-----dlcjdeobnkddqtbfdnk9bqq1r.xn--80adxhks]
-  source: {host: 92.53.96.17, password: Ncx-oCU-L5C-RxZ, start_dir: evostokmoskva,
-    user: promstokcom}
-  ticket: '3284841'

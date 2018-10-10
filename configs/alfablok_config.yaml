@@ -1,5 +1,0 @@
-alfablok:
-  destination: {host: 92.53.96.201, password: hLd5gmjRV8gW, user: alfablok}
-  domains: [alfa-blok.ru]
-  source: {host: 92.53.96.200, password: GCrV7Jzh, start_dir: alfa-blok.ru, user: astrofel}
-  ticket: '3284745'
