@@ -9,7 +9,14 @@ class Api():
     def __init__(self, token):
         self.token = token
 
-    def request(self, method, params, request_method):
+    def __request(self, method: str, params: dict, request_method: str) -> str:
+        """
+        Метод для отправки запросов в api
+        :param method: метод api
+        :param params: параметры запроса
+        :param request_method: HTTP метод
+        :return:
+        """
         headers = { "Content-Type": "application/json",
                     "Accept": "application/json",
                     "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL",
@@ -30,6 +37,12 @@ class Api():
     def get_token(self,
                   user: str,
                   password: str) -> str:
+        """
+        Получение токена для работы с api.
+        :param user:
+        :param password:
+        :return:
+        """
         headers = {"Content-Type": "application/json", "Accept": "application/json", "x-app-key": "rrbrMecQRjzfL9dWaZEqYdrL"}
         response = requests.post('https://api.timeweb.ru/v1.1/access', headers=headers, auth=(user, password))
 
@@ -40,13 +53,22 @@ class Api():
                      user: str,
                      ticket: str,
                      upthread=False) -> str:
+        """
+        Добавление комментария к тикету
+        :rtype: str
+        :param message: текст комментария
+        :param user: логин пользователя
+        :param ticket: номер тикета строкой
+        :param upthread: нужно ли поднимать тикет
+        :return:
+        """
         data = {"message": message,
                 "attachments": [],
                 "internal": True,
                 "upthread": upthread}
         method = "accounts/{0}/tickets/{1}/comments".format(user, str(ticket))
 
-        response = self.request(method, data, "POST")
+        response = self.__request(method, data, "POST")
         return response
 
     def delay_ticket(self,
@@ -54,6 +76,14 @@ class Api():
                      ticket: str,
                      delay_time: datetime.timedelta,
                      message: str) -> str:
+        """
+        Откладывание тикета
+        :param user: логин пользователя
+        :param ticket: номер тикета
+        :param delay_time: время, на которое тикет нужно отложить
+        :param message: текст комментария
+        :return:
+        """
         now = datetime.datetime.now()
         delay_time = format(now + delay_time, '%Y-%m-%d %H:%M:%S')
         data = {"delay": delay_time,
@@ -61,5 +91,5 @@ class Api():
                 }
         method = "accounts/{0}/tickets/{1}".format(user, str(ticket))
 
-        response = self.request(method, data, "PUT")
+        response = self.__request(method, data, "PUT")
         return response

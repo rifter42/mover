@@ -3,8 +3,9 @@ from functools import wraps
 
 
 def make_rsync_command(host, user, password, dir, dst_dir):
-    """
 
+    """
+    ОЧЕНЬ ХОРОШАЯ ФУНКЦИЯ КОТОРАЯ ВОЗВРАЩАЕТ ОЧЕНЬ ДЛИННУЮ СТРОКУ КОМАНДЫ RSYNC И КОММЕНТ ТОЖЕ ДЛИННЫЙ
     :param host:
     :param user:
     :param password:
@@ -13,8 +14,12 @@ def make_rsync_command(host, user, password, dir, dst_dir):
     :return:
     :rtype: str
     """
+
     return "RSYNC_PASSWORD={0} rsync --bwlimit=500k -e 'ssh -i '$HOME/.ssh/id_rsa_move' -o StrictHostKeyChecking=no' --log-file=$HOME/.tmp/rsync.log -rlcp {2}@{3}:{4} {5} ".format(password, dst_dir, user, host, dir, dst_dir)
+
 def retry(ExceptionToCheck, tries=4, delay=3, backoff=2, logger=None):
+    # StackOverflow-driven development
+
     """Retry calling the decorated function using an exponential backoff.
 
     http://www.saltycrane.com/blog/2009/11/trying-out-retry-decorator-python/
