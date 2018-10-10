@@ -107,3 +107,9 @@ venv.bak/
 /sample_configs
 /config.yaml
 /test_api.py
+/mover.log
+/logs
+/configs
+/server.pem
+/config.yaml
+/__pycache__
