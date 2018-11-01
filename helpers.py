@@ -15,7 +15,7 @@ def make_rsync_command(host, user, password, dir, dst_dir):
     :rtype: str
     """
 
-    return "RSYNC_PASSWORD={0} rsync --bwlimit=500k -e 'ssh -i '$HOME/.ssh/id_rsa_move' -o StrictHostKeyChecking=no' --log-file=$HOME/.tmp/rsync.log -rlcp {2}@{3}:{4} {5} ".format(password, dst_dir, user, host, dir, dst_dir)
+    return "RSYNC_PASSWORD={0} rsync --bwlimit=500 -e 'ssh -i '$HOME/.ssh/id_rsa_move' -o StrictHostKeyChecking=no' --log-file=$HOME/.tmp/rsync.log -rlcp {2}@{3}:{4} {5} ".format(password, dst_dir, user, host, dir, dst_dir)
 
 def retry(ExceptionToCheck, tries=4, delay=3, backoff=2, logger=None):
     # StackOverflow-driven development

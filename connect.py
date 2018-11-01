@@ -108,7 +108,7 @@ class SshRemote(BaseRemote):
         file_path = os.path.join(path, FILE)
         self.command("echo {0} > {1}".format(HASH, file_path))
 
-        for domain in domains[:]:
+        for domain in domains:
             response = requests.get('http://{0}/{1}'.format(domain, FILE))
             if HASH in str(response.content):
                 ret_domain, ret_path = domain, path

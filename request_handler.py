@@ -13,7 +13,7 @@ class ConfigHandler(http.server.BaseHTTPRequestHandler):
     Обработчик post-запросов от панели
     """
 
-    def create_config(self, data: dict):
+    def create_config(self, path, data: dict):
 
         """
         делает из полученного json конфиг в yaml
@@ -21,7 +21,7 @@ class ConfigHandler(http.server.BaseHTTPRequestHandler):
         :return:
         """
 
-        with open(self.path, 'w') as f:
+        with open(path, 'w') as f:
             yaml.dump(data, f, allow_unicode=True)
 
     def run_mover(self, path: str):
@@ -56,7 +56,7 @@ class ConfigHandler(http.server.BaseHTTPRequestHandler):
         self.log_request()
         self.log_message(post_data)
         path = os.path.join(MOVER_HOME, "configs/{}_config.yaml".format(list(data.keys())[0]))
-        self.create_config(data)
+        self.create_config(path, data)
         self.run_mover(path)
 
 
